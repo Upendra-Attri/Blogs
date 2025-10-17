@@ -1,0 +1,43 @@
+BLOG 2 — SQL INJECTION
+Introduction
+
+Today I cover SQL Injection. I completed 11 SQLi labs on PortSwigger and learned several exploitation techniques and detection methods: union-based, time-based, boolean-based and error-based SQL injection.
+
+Thanks to PortSwigger
+
+Big thanks to PortSwigger — their interactive labs helped me understand how different SQL injection types appear in real web apps and how to think like an attacker/defender while staying ethical.
+
+Types of SQL Injection (high level)
+Union-based
+
+Union-based SQLi uses the UNION operator to combine the results of an injected query with the original query’s result. This can allow an attacker to fetch additional columns or rows if the application returns database output. The exact syntax and behavior depend on the backend database and the number/types of columns.
+
+Time-based (blind)
+
+Time-based injection is useful when the application doesn’t return data directly. Instead, you add a condition that causes the database to pause for a measurable time (e.g., a SLEEP() call) when the injected condition is true. By measuring response delays, you can infer true/false results and extract information bit by bit.
+
+Boolean-based (blind)
+
+Boolean-based or content-based blind SQLi relies on the page’s behavior or content differences for true vs false statements. Example: adding a condition that is always true (1=1) vs always false (1=2) to see how the application’s response changes.
+
+Error-based
+
+Error-based SQLi forces the database to return an error that reveals information (such as parts of a query, data types, or other useful strings). Different databases expose different error behaviors that attackers can leverage to enumerate schema details.
+
+Different Database Engines
+
+Different RDBMSs share similar SQL syntax but have important differences that affect exploitation and enumeration:
+
+MySQL: Commonly accepts UNION queries without requiring a dummy table. Functions and keywords are sometimes different from other DBs.
+
+Oracle: Uses a built-in dummy table called DUAL (e.g., SELECT ... FROM DUAL) in some contexts where other databases do not require it.
+
+PostgreSQL, MSSQL, SQLite: All have variations in functions, casting, and error messages.
+
+Always verify syntax for the target database engine rather than assuming one syntax fits all.
+
+Tools to Automate (high level)
+
+There are tools that automate scanning and basic exploitation checks. One popular example is sqlmap, an automation tool that can detect injection points and enumerate information. Automating saves time, but automation is not a replacement for understanding the underlying techniques — learn the manual way first so you can interpret tool output correctly and use tools responsibly.
+
+You can also build your own reconnaissance/automation scripts in languages like Python or Bash to learn how requests, payloads, and parsing work — this improves your debugging and analysis skills.
